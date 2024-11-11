@@ -11,7 +11,7 @@ connection();
 
 // Crear servidor node
 const app = express();
-const port = 4000;
+const port = 3000;
 
 // Configurar cors(Para que se hagan las peticiones correctamenete)
 app.use(cors());
@@ -21,6 +21,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Cargar conf rutas
+const UserRoutes = require("./routes/user");
+const PublicationRoutes = require("./routes/publication");
+const FollowRoutes = require("./routes/follow");
+
+// --->>Para cargar esas rutas vamos a usar (app.use) se usa para cargar una cofiguracion dentro de express
+app.use("/api/user" , UserRoutes); // Como primer parametro vamos a indicar un prefijo (/api) para sabr que es un metoo de api a lo que hacemos una peticion
+app.use("/api/publication", PublicationRoutes);
+app.use("/api/follow", FollowRoutes);
 
 // Poner al servidor a escuchar peticiones http
 app.listen(port, () => {

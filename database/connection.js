@@ -4,7 +4,7 @@ const connection = async () => {
 
     try{
 
-        await mongoose.connect("mongodb://localhost:27017//mi_redsocial");// Se puede pasar parrametros para errores
+        await mongoose.connect("mongodb://localhost:27017/mi_redsocial");// Se puede pasar parrametros para errores
 
         console.log("¡Conexion a  nuestra base de datos : mi_redsocial Exitosa!");
 
