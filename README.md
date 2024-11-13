@@ -27,7 +27,7 @@ La base de datos está estructurada en tres entidades principales:
 
 Se pueden agregar más entidades como **Notificaciones**, **Mensajes**, **Comentarios**, entre otros.
 
-![Diagrama de la Base de Datos]
+Diagrama de la Base de Datos
 ![image](https://github.com/user-attachments/assets/f2a260c5-8669-4d72-b68a-43858db18467)
 
 
