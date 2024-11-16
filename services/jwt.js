@@ -11,9 +11,10 @@ const crateToken = (user) => { // lo exportamos de aqui por que solo es una func
         id: user._id,
         name: user.name,
         surname: user.surname,
+        email: user.email,
         nick: user.nick,
         role: user.role,
-        imagen: user.image,
+        image: user.image,
         exp: moment().add(30, "days").unix(),
         iat: moment().unix(),
         

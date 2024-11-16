@@ -204,6 +204,121 @@ const list = async (req, res) => {
     });
   }
 };
+/*----------------------------------------------------------------------------------------------------------------------*/
+// Metodo Editar
+const update = async (req, res) => {
+  // Recoger info del usuario a actualizar
+  let userIdentity = req.user;
+  let userToUpdate = req.body;
+
+  // Eliminar campos sobrantes
+  delete userToUpdate.iat;
+  delete userToUpdate.exp;
+  delete userToUpdate.role;
+  delete userToUpdate.image;
+
+  // Validar que email y nick existen
+  if (userToUpdate.email) {
+    userToUpdate.email = userToUpdate.email.toLowerCase();
+  }
+  if (userToUpdate.nick) {
+    userToUpdate.nick = userToUpdate.nick.toLowerCase();
+  }
+
+  try {
+    // Comprobar si el usuario ya existe
+    const users = await User.find({
+      $or: [
+        { email: userToUpdate.email },
+        { nick: userToUpdate.nick },
+      ],
+    });
+
+    let userIsset = false;
+    let existingUser = null;
+
+    // Verificar si el usuario ya existe y no es el mismo que está haciendo la actualización
+    users.forEach(user => {
+      if (user && user._id != userIdentity.id) {
+        userIsset = true;
+        existingUser = user; // Guardar el usuario existente
+      }
+    });
+
+    if (userIsset) {
+      // Si el usuario ya existe, devolver los datos del usuario existente con un mensaje
+      return res.status(200).send({
+        status: "success",
+        message: "El usuario ya existe",
+        user: existingUser, // Devolver los datos del usuario existente
+      });
+    }
+
+    // Cifrar la contraseña si es necesario
+    if (userToUpdate.password) {
+      let pwd = await bcrypt.hash(userToUpdate.password, 10); // Recomendación: factor de coste 10
+      userToUpdate.password = pwd; // Asigna la contraseña cifrada al objeto `userToUpdate`
+    }
+
+    // Buscar y actualizar el usuario
+    const userUpdated = await User.findByIdAndUpdate(userIdentity.id, userToUpdate, { new: true });
+
+    if (!userUpdated) {
+      return res.status(400).send({ status: "error", 
+        message: "Error al actualizar usuario" });
+    }
+
+    // Devolver respuesta de éxito con el usuario actualizado
+    return res.status(200).send({
+      status: "success",
+      message: "Método de actualizar usuario",
+      user: userUpdated, // Enviar los datos del usuario actualizado
+    });
+
+  } catch (error) {
+    return res.status(500).send({
+       status: "error", 
+       message: "error al actualizar",
+       });
+  }
+};
+
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+// Metodo Subir archivos
+
+const upload = async (req, res) =>{
+  try{
+
+    // Recoger el fichero de imagen y comprobar que existe
+
+    // Conseguir el nombre del archivo
+
+    // Sacara la extension del archivo
+
+    // Comprobar  extension
+
+    // Si no es correcto, borrar archivo
+
+    // si es correcta, guardar imagen en BD
+
+    // Devolver repuesta
+
+    return res.status(200).send({
+      status: "success",
+      message: "Subir imagen",
+      user: req.user,
+      file: req.file,
+      files: req.files
+    })
+
+  }catch(error){
+    return res.status(500).send({
+      status: "error",
+      message
+    })
+  }
+}
 
 // Exportar acciones
 
@@ -212,5 +327,8 @@ module.exports = {
   register,
   login,
   profile,
-  list
+  list,
+  update,
+  upload
+
 };
